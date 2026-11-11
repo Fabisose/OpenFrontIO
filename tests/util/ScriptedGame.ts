@@ -274,6 +274,7 @@ const STRUCTURES = [
   UnitType.DefensePost,
   UnitType.SAMLauncher,
   UnitType.MissileSilo,
+  UnitType.CoastalBattery,
 ] as const;
 
 function nearbyWater(
@@ -343,7 +344,7 @@ function buildStructureIntent(
     if (picked === null) return null;
     unit = picked;
   }
-  if (unit === UnitType.Port) {
+  if (unit === UnitType.Port || unit === UnitType.CoastalBattery) {
     const tile = pick(rand, shores);
     if (tile === null || p.canBuild(unit, tile) === false) return null;
     return { type: "build_unit", unit, tile };

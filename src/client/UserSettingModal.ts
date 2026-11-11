@@ -1488,6 +1488,16 @@ export class UserSettingModal extends BaseModal {
       ></setting-keybind>
 
       <setting-keybind
+        action="buildCoastalBattery"
+        label=${translateText("user_setting.build_coastal_battery")}
+        description=${translateText("user_setting.build_hotkey_desc")}
+        defaultKey=${this.defaultKeybinds.buildCoastalBattery}
+        .value=${this.getKeyValue("buildCoastalBattery")}
+        .display=${this.getKeyChar("buildCoastalBattery")}
+        @change=${this.handleKeybindChange}
+      ></setting-keybind>
+
+      <setting-keybind
         action="buildScrollModifier"
         .allowModifiers=${true}
         label=${translateText("user_setting.build_scroll_modifier")}

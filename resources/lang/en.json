@@ -203,6 +203,7 @@
     "desc": {
       "atom_bomb": "Small explosion",
       "city": "Increases max population",
+      "coastal_battery": "Shells enemy warships and boats near your coast",
       "defense_post": "Increases defenses of nearby borders",
       "factory": "Creates railroads and spawns trains",
       "hydrogen_bomb": "Large explosion",
@@ -2856,6 +2857,7 @@
     "atom_bomb": "Atom Bomb",
     "boat": "Boat",
     "city": "City",
+    "coastal_battery": "Coastal Battery",
     "defense_post": "Defense Post",
     "factory": "Factory",
     "hydrogen_bomb": "Hydrogen Bomb",
@@ -2915,6 +2917,7 @@
     "break_alliance_desc": "Break alliance with the player whose tile is under your cursor.",
     "build_atom_bomb": "Build Atom Bomb",
     "build_city": "Build City",
+    "build_coastal_battery": "Build Coastal Battery",
     "build_controls": "Build Controls",
     "build_defense_post": "Build Defense Post",
     "build_factory": "Build Factory",

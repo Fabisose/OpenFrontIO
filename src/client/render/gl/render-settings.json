@@ -151,6 +151,10 @@
       "Missile Silo": {
         "scale": 1.55,
         "iconFill": 0.85
+      },
+      "Coastal Battery": {
+        "scale": 1.4,
+        "iconFill": 0.8
       }
     },
     "highlightOutlineWidth": 0.04,
@@ -384,6 +388,10 @@
       "intensity": 1.2
     },
     "Missile Silo": {
+      "radius": 18,
+      "intensity": 1.2
+    },
+    "Coastal Battery": {
       "radius": 18,
       "intensity": 1.2
     },

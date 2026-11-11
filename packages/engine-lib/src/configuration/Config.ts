@@ -172,6 +172,12 @@ export class Config {
     return 90;
   }
 
+  // Coastal batteries shell hostile warships and transport ships inside this
+  // radius. Shorter than warshipTargettingRange on purpose: a fleet can stand
+  // off, but it cannot escort a landing onto a defended shore for free.
+  coastalBatteryRange(): number {
+    return 110;
+  }
   defensePostRange(): number {
     return 30;
   }
@@ -231,6 +237,9 @@ export class Config {
         break;
       case UnitType.DefensePost:
         info = { constructionDuration: this.instantBuild() ? 0 : 5 * 10 };
+        break;
+      case UnitType.CoastalBattery:
+        info = { constructionDuration: this.instantBuild() ? 0 : 10 * 10 };
         break;
       case UnitType.SAMLauncher:
         info = {

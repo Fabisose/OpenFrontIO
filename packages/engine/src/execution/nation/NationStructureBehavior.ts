@@ -211,6 +211,11 @@ const PROACTIVE_DEFENSE_POST_HOSTILE_TROOP_RATIO: Partial<
 /** Random tiles tried when looking for a defense post spot */
 const DEFENSE_POST_SAMPLE_ATTEMPTS = 150;
 
+/** Nations build at most this many coastal batteries (one per port). */
+const MAX_COASTAL_BATTERIES = 2;
+/** Cities a nation wants before it spends gold on a coastal battery. */
+const COASTAL_BATTERY_MIN_CITIES = 2;
+
 // Reusable neighbor buffer for hot loops; the simulation is single-threaded.
 const NEIGHBOR_SCRATCH: TileRef[] = [0, 0, 0, 0];
 
@@ -289,12 +294,41 @@ export class NationStructureBehavior {
     if (this.isInPostSaveUpBlockedPhase()) {
       return false;
     }
-    const built = this.doHandleStructures();
+    const built = this.maybeBuildCoastalBattery() || this.doHandleStructures();
     if (built) {
       this.lastStructureTick = this.game.ticks();
       this.placementsCount++;
     }
     return built;
+  }
+
+  /**
+   * Guards ports with coastal batteries: one per port, up to
+   * MAX_COASTAL_BATTERIES, and only once the economy has a couple of cities.
+   * Goes through the normal structure pacing (the caller counts it).
+   */
+  private maybeBuildCoastalBattery(): boolean {
+    if (this.game.config().isUnitDisabled(UnitType.CoastalBattery)) {
+      return false;
+    }
+    if (this.cityCount() < COASTAL_BATTERY_MIN_CITIES) return false;
+    const player = this.player;
+    const ports = player.units(UnitType.Port);
+    const batteries = player.units(UnitType.CoastalBattery).length;
+    if (batteries >= Math.min(ports.length, MAX_COASTAL_BATTERIES)) {
+      return false;
+    }
+    if (player.gold() < this.cost(UnitType.CoastalBattery)) return false;
+    // Batteries go next to ports in the order the ports were built.
+    const tile = player.canBuild(
+      UnitType.CoastalBattery,
+      ports[batteries].tile(),
+    );
+    if (tile === false) return false;
+    this.game.addExecution(
+      new ConstructionExecution(player, UnitType.CoastalBattery, tile),
+    );
+    return true;
   }
 
   /**

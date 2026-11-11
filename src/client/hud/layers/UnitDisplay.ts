@@ -26,6 +26,7 @@ import { GameView } from "../../view";
 import {
   atomBombIcon,
   cityIcon,
+  coastalBatteryIcon,
   defensePostIcon,
   factoryIcon,
   goldCoinIcon,
@@ -59,6 +60,7 @@ export class UnitDisplay extends LitElement implements Controller {
   private _port = 0;
   private _defensePost = 0;
   private _samLauncher = 0;
+  private _coastalBattery = 0;
   private allDisabled = false;
   private enabledUnitCount = 0;
   private tutorialMode = false;
@@ -486,6 +488,7 @@ export class UnitDisplay extends LitElement implements Controller {
     this._port = player.totalUnitLevels(UnitType.Port);
     this._defensePost = player.totalUnitLevels(UnitType.DefensePost);
     this._samLauncher = player.totalUnitLevels(UnitType.SAMLauncher);
+    this._coastalBattery = player.totalUnitLevels(UnitType.CoastalBattery);
     this._factories = player.totalUnitLevels(UnitType.Factory);
     this._warships = player.totalUnitLevels(UnitType.Warship);
     this.requestUpdate();
@@ -579,6 +582,13 @@ export class UnitDisplay extends LitElement implements Controller {
               UnitType.Warship,
               "warship",
               this.getHotkey("buildWarship", "Digit7"),
+            )}
+            ${this.renderUnitItem(
+              coastalBatteryIcon,
+              this._coastalBattery,
+              UnitType.CoastalBattery,
+              "coastal_battery",
+              this.getHotkey("buildCoastalBattery", "KeyV"),
             )}
             ${this.renderUnitItem(
               atomBombIcon,

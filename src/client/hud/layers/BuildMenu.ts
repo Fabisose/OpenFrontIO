@@ -28,6 +28,7 @@ import { UIState } from "../../UIState";
 import { GameView } from "../../view";
 const warshipIcon = assetUrl("images/BattleshipIconWhite.svg");
 const cityIcon = assetUrl("images/CityIconWhite.svg");
+const coastalBatteryIcon = assetUrl("images/CoastalBatteryIconWhite.svg");
 const factoryIcon = assetUrl("images/FactoryIconWhite.svg");
 const goldCoinIcon = assetUrl("images/GoldCoinIcon.svg");
 const mirvIcon = assetUrl("images/MIRVIcon.svg");
@@ -102,6 +103,13 @@ const buildTable: BuildItemDisplay[][] = [
       icon: shieldIcon,
       description: "build_menu.desc.defense_post",
       key: "unit_type.defense_post",
+      countable: true,
+    },
+    {
+      unitType: UnitType.CoastalBattery,
+      icon: coastalBatteryIcon,
+      description: "build_menu.desc.coastal_battery",
+      key: "unit_type.coastal_battery",
       countable: true,
     },
     {

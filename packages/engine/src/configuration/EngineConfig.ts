@@ -383,6 +383,11 @@ export class EngineConfig extends Config {
           (numUnits: number) => Math.min(3_000_000, (numUnits + 1) * 1_500_000),
           UnitType.SAMLauncher,
         );
+      case UnitType.CoastalBattery:
+        return this.costWrapper(
+          (numUnits: number) => Math.min(800_000, (numUnits + 1) * 200_000),
+          UnitType.CoastalBattery,
+        );
       case UnitType.City:
         return this.costWrapper(
           (numUnits: number) => Math.min(1_000_000, pow2(numUnits) * 125_000),
@@ -813,6 +818,13 @@ export class EngineConfig extends Config {
   /** Trade ships a warship must capture to gain one veterancy level. */
   warshipVeterancyTradeCaptures(): number {
     return 25;
+  }
+
+  // Ticks between coastal battery shells. Slower than a warship (20): one
+  // battery loses a gun duel against a fleet, but wins against a lone ship
+  // that has to sail into its range.
+  coastalBatteryShellAttackRate(): number {
+    return 30;
   }
 
   defensePostShellAttackRate(): number {

@@ -15,6 +15,7 @@ import type {
   SnapshotWriter,
 } from "../snapshot/SnapshotContext";
 import { CityExecution } from "./CityExecution";
+import { CoastalBatteryExecution } from "./CoastalBatteryExecution";
 import { DefensePostExecution } from "./DefensePostExecution";
 import { FactoryExecution } from "./FactoryExecution";
 import { MirvExecution } from "./MIRVExecution";
@@ -164,6 +165,9 @@ export class ConstructionExecution implements Execution {
       case UnitType.Factory:
         this.mg.addExecution(new FactoryExecution(this.structure!));
         break;
+      case UnitType.CoastalBattery:
+        this.mg.addExecution(new CoastalBatteryExecution(this.structure!));
+        break;
       default:
         console.warn(
           `unit type ${this.constructionType} cannot be constructed`,
@@ -180,6 +184,7 @@ export class ConstructionExecution implements Execution {
       case UnitType.SAMLauncher:
       case UnitType.City:
       case UnitType.Factory:
+      case UnitType.CoastalBattery:
         return true;
       default:
         return false;

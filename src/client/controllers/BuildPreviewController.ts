@@ -855,6 +855,8 @@ export class BuildPreviewController implements Controller {
         return this.game.config().trainStationMaxRange();
       case UnitType.DefensePost:
         return this.game.config().defensePostRange();
+      case UnitType.CoastalBattery:
+        return this.game.config().coastalBatteryRange();
       default:
         return 0;
     }

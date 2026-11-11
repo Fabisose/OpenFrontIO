@@ -118,6 +118,7 @@ type StartPreparation = {
 
 const TUTORIAL_DISABLED_UNITS: UnitType[] = [
   UnitType.City,
+  UnitType.CoastalBattery,
   UnitType.DefensePost,
   UnitType.Factory,
   UnitType.SAMLauncher,
