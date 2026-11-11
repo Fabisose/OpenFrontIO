@@ -88,6 +88,10 @@ export class SendUpgradeStructureIntentEvent implements GameEvent {
   ) {}
 }
 
+export class SendFortifyPortIntentEvent implements GameEvent {
+  constructor(public readonly unitId: number) {}
+}
+
 export class SendAllianceRejectIntentEvent implements GameEvent {
   constructor(public readonly requestor: PlayerView) {}
 }
@@ -323,6 +327,9 @@ export class Transport {
     this.subscribe(SendAttackIntentEvent, (e) => this.onSendAttackIntent(e));
     this.subscribe(SendUpgradeStructureIntentEvent, (e) =>
       this.onSendUpgradeStructureIntent(e),
+    );
+    this.subscribe(SendFortifyPortIntentEvent, (e) =>
+      this.sendIntent({ type: "fortify_port", unitId: e.unitId }),
     );
     this.subscribe(SendBoatAttackIntentEvent, (e) =>
       this.onSendBoatAttackIntent(e),

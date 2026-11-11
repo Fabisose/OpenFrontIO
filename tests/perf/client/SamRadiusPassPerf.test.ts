@@ -143,6 +143,7 @@ function createMockSAMStructures(
       level,
       veterancy: 0,
       hasTrainStation: false,
+      fortified: false,
       trainType: 0,
       loaded: null,
       samUpgradeStartTick: isUpgrading ? (i * 7) % 50 : null,

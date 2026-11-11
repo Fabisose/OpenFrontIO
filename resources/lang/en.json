@@ -2363,6 +2363,8 @@
   "radial_menu": {
     "delete_unit_description": "Click to delete the nearest unit",
     "delete_unit_title": "Delete Unit",
+    "fortify_port_description": "Shells enemy ships, hardens nearby land and repairs docked warships faster",
+    "fortify_port_title": "Fortify Port",
     "upgrade_x": "Upgrade x{amount}"
   },
   "relation": {

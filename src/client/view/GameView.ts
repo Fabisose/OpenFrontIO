@@ -434,6 +434,7 @@ export class GameView implements GameLike {
           (unit.state.ownerID !== update.ownerID ||
             unit.state.level !== update.level ||
             unit.state.isActive !== update.isActive ||
+            unit.state.fortified !== (update.fortified ?? false) ||
             (unit.state.underConstruction &&
               !(update.underConstruction ?? false)))
         ) {

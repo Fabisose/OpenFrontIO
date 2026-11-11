@@ -117,6 +117,8 @@ export interface UnitState {
   level: number;
   veterancy: number;
   hasTrainStation: boolean;
+  /** Ports only: the port has been upgraded to a fortified port. */
+  fortified: boolean;
   trainType: number | null; // 0=Engine, 1=TailEngine, 2=Carriage
   loaded: boolean | null;
   constructionStartTick: number | null;

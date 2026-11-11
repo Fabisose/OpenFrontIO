@@ -43,6 +43,7 @@ function unit(overrides: Partial<UnitState> = {}): UnitState {
     level: 1,
     veterancy: 0,
     hasTrainStation: false,
+    fortified: false,
     trainType: null,
     loaded: null,
     constructionStartTick: null,

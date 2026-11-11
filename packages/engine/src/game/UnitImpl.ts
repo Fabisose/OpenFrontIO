@@ -55,6 +55,7 @@ export class UnitImpl implements Unit {
   // Number of missiles in cooldown, if empty all missiles are ready.
   private _missileTimerQueue: number[] = [];
   private _hasTrainStation: boolean = false;
+  private _fortified: boolean = false;
   private _level: number = 1;
   private _targetable: boolean = true;
   private _loaded: boolean | undefined;
@@ -185,6 +186,7 @@ export class UnitImpl implements Unit {
         this._samLauncherState?.upgradeStartTick !== undefined
           ? { ...this._samLauncherState }
           : undefined,
+      fortified: this._fortified ? true : undefined,
       pos: this._tile,
       markedForDeletion: this._deletionAt ?? false,
       targetable: this._targetable,
@@ -741,6 +743,19 @@ export class UnitImpl implements Unit {
     return this._hasTrainStation;
   }
 
+  isFortified(): boolean {
+    return this._fortified;
+  }
+
+  setFortified(fortified: boolean): void {
+    if (this._type !== UnitType.Port) {
+      throw new Error("setFortified called on non-port unit");
+    }
+    if (this._fortified === fortified) return;
+    this._fortified = fortified;
+    this.mg.addUpdate(this.toUpdate());
+  }
+
   increaseLevel(): void {
     if (this._type === UnitType.SAMLauncher) {
       const currentTick = this.mg.ticks();
@@ -846,6 +861,7 @@ export class UnitImpl implements Unit {
       troops: this._troops,
       missileTimerQueue: [...this._missileTimerQueue],
       hasTrainStation: this._hasTrainStation,
+      fortified: this._fortified,
       level: this._level,
       targetable: this._targetable,
       loaded: this._loaded ?? null,
@@ -898,6 +914,7 @@ export class UnitImpl implements Unit {
     this._troops = s.troops;
     this._missileTimerQueue = [...s.missileTimerQueue];
     this._hasTrainStation = s.hasTrainStation;
+    this._fortified = s.fortified;
     this._level = s.level;
     this._targetable = s.targetable;
     this._loaded = s.loaded ?? undefined;
@@ -911,7 +928,11 @@ export class UnitImpl implements Unit {
 
 export const UnitSnapshot = snapshotType({
   name: "Unit",
-  version: 1,
+  version: 2,
+  // v1 predates port fortification: no port was fortified.
+  migrations: {
+    1: (d) => ({ ...d, fortified: false }),
+  },
   schema: z.object({
     id: zInt(),
     type: UnitTypeSchema,
@@ -954,6 +975,7 @@ export const UnitSnapshot = snapshotType({
     troops: zNum(),
     missileTimerQueue: z.array(zInt()),
     hasTrainStation: z.boolean(),
+    fortified: z.boolean(),
     level: zInt(),
     targetable: z.boolean(),
     loaded: z.boolean().nullable(),

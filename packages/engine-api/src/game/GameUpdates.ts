@@ -221,6 +221,7 @@ export interface UnitUpdate {
   trainType?: TrainType; // Only for trains
   loaded?: boolean; // Only for trains
   samUpgrade?: SamLauncherState;
+  fortified?: boolean; // Only for ports
 }
 
 export interface AttackUpdate {

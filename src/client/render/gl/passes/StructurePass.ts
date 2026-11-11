@@ -18,6 +18,7 @@ import type { GhostPreviewData, RendererConfig, UnitState } from "../../types";
 import {
   UT_CITY,
   UT_COASTAL_BATTERY,
+  UT_FORTIFIED_PORT,
   UT_DEFENSE_POST,
   UT_FACTORY,
   UT_MISSILE_SILO,
@@ -55,7 +56,10 @@ const STRUCTURE_ORDER = [
   UT_SAM_LAUNCHER,
   UT_MISSILE_SILO,
   UT_COASTAL_BATTERY,
+  UT_FORTIFIED_PORT,
 ] as const;
+
+const FORTIFIED_PORT_COL = STRUCTURE_ORDER.indexOf(UT_FORTIFIED_PORT);
 
 const ATLAS_COLS = STRUCTURE_ORDER.length;
 
@@ -311,8 +315,9 @@ export class StructurePass {
 
     for (const unit of units.values()) {
       if (!unit.isActive) continue;
-      const atlasIdx = this.typeToAtlasCol.get(unit.unitType);
+      let atlasIdx = this.typeToAtlasCol.get(unit.unitType);
       if (atlasIdx === undefined) continue;
+      if (unit.fortified) atlasIdx = FORTIFIED_PORT_COL;
 
       this.instanceBuf.ensureCapacity(count + 1);
 

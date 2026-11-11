@@ -42,6 +42,7 @@ export type Intent =
   | MarkDisconnectedIntent
   | EmbargoAllIntent
   | UpgradeStructureIntent
+  | FortifyPortIntent
   | DeleteUnitIntent
   | KickPlayerIntent
   | TogglePauseIntent
@@ -66,6 +67,7 @@ export type BuildUnitIntent = z.infer<typeof BuildUnitIntentSchema>;
 export type UpgradeStructureIntent = z.infer<
   typeof UpgradeStructureIntentSchema
 >;
+export type FortifyPortIntent = z.infer<typeof FortifyPortIntentSchema>;
 export type MoveWarshipIntent = z.infer<typeof MoveWarshipIntentSchema>;
 export type QuickChatIntent = z.infer<typeof QuickChatIntentSchema>;
 export type MarkDisconnectedIntent = z.infer<
@@ -505,6 +507,11 @@ export const UpgradeStructureIntentSchema = z.object({
   amount: zb.uint({ min: 1, max: MAX_UPGRADE_AMOUNT }).optional(),
 });
 
+export const FortifyPortIntentSchema = z.object({
+  type: z.literal("fortify_port"),
+  unitId: zb.uint(),
+});
+
 export const CancelAttackIntentSchema = z.object({
   type: z.literal("cancel_attack"),
   attackID: z.string(),
@@ -593,6 +600,7 @@ export const IntentSchema = z.discriminatedUnion("type", [
   TogglePauseIntentSchema,
   UpdateGameConfigIntentSchema,
   ToggleGameStartTimerIntentSchema,
+  FortifyPortIntentSchema,
 ]);
 
 // StampedIntent = Intent with server-stamped clientID (used in turns and execution)

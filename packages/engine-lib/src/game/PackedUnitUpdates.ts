@@ -96,17 +96,22 @@ export const intToTrainType = (val: number): TrainType | undefined => {
   }
 };
 
-// Packed A: ownerID (12 bits), lastOwnerID (12 bits), unitType (5 bits)
+// Packed A: ownerID (12 bits), lastOwnerID (12 bits), unitType (5 bits),
+// fortified (1 bit)
 export const packA = (
   ownerID: number,
   lastOwnerID: number | undefined,
   unitType: UnitType,
+  fortified: boolean = false,
 ): number => {
   const oID = ownerID & 0xfff;
   const lID = lastOwnerID !== undefined ? lastOwnerID & 0xfff : 0xfff;
   const uType = unitTypeToInt(unitType) & 0x1f;
-  return oID | (lID << 12) | (uType << 24);
+  return oID | (lID << 12) | (uType << 24) | (fortified ? 1 << 29 : 0);
 };
+
+export const unpackAFortified = (packed: number): boolean =>
+  (packed & (1 << 29)) !== 0;
 
 export const unpackAOwnerID = (packed: number): number => packed & 0xfff;
 export const unpackALastOwnerID = (packed: number): number | undefined => {
@@ -218,6 +223,9 @@ export class PackedUnitUpdateDecoder {
 
   get id(): number {
     return this.buffer[this.offset + OFFSET_ID];
+  }
+  get fortified(): boolean {
+    return unpackAFortified(this.buffer[this.offset + OFFSET_PACKED_A]);
   }
   get pos(): number {
     return this.buffer[this.offset + OFFSET_POS];
@@ -389,7 +397,7 @@ export class PackedUnitUpdateDecoder {
       };
     }
 
-    return {
+    const update: UnitUpdate = {
       type: GameUpdateType.Unit,
       unitType: this.unitType,
       troops: this.troops,
@@ -416,6 +424,9 @@ export class PackedUnitUpdateDecoder {
       samUpgrade,
       missileTimerQueue: [],
     };
+    // Only present when set, so an unfortified unit round-trips unchanged.
+    if (this.fortified) update.fortified = true;
+    return update;
   }
 }
 
@@ -492,6 +503,7 @@ export function packUnitUpdates(units: UnitUpdate[]): {
       update.ownerID,
       update.lastOwnerID,
       update.unitType,
+      update.fortified === true,
     );
     packedUnitUpdates[offset + OFFSET_PACKED_B] = packB(update);
     packedUnitUpdates[offset + OFFSET_LEVEL] = update.level;

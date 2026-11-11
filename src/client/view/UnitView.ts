@@ -233,6 +233,9 @@ export class UnitView implements UnitLike {
   hasTrainStation(): boolean {
     return this.state.hasTrainStation;
   }
+  isFortified(): boolean {
+    return this.state.fortified;
+  }
   trainType(): TrainType | undefined {
     return numToTrainType(this.state.trainType);
   }

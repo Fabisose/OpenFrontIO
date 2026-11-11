@@ -17,6 +17,7 @@ import { EmbargoAllExecutionSnapshot } from "../execution/EmbargoAllExecution";
 import { EmbargoExecutionSnapshot } from "../execution/EmbargoExecution";
 import { EmojiExecutionSnapshot } from "../execution/EmojiExecution";
 import { FactoryExecutionSnapshot } from "../execution/FactoryExecution";
+import { FortifyPortExecutionSnapshot } from "../execution/FortifyPortExecution";
 import { MarkDisconnectedExecutionSnapshot } from "../execution/MarkDisconnectedExecution";
 import { MirvExecutionSnapshot } from "../execution/MIRVExecution";
 import { MissileSiloExecutionSnapshot } from "../execution/MissileSiloExecution";
@@ -97,6 +98,7 @@ export const EXECUTION_SNAPSHOT_TYPES = [
   TransportShipExecutionSnapshot,
   TribeExecutionSnapshot,
   UpgradeStructureExecutionSnapshot,
+  FortifyPortExecutionSnapshot,
   WarshipExecutionSnapshot,
   WinCheckExecutionSnapshot,
 ] as unknown as readonly ExecutionSnapshotType<unknown>[];

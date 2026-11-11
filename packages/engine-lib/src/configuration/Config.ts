@@ -172,6 +172,10 @@ export class Config {
     return 90;
   }
 
+  // One-off price for turning a port into a fortified port (before cheats).
+  portFortificationBaseCost(): bigint {
+    return 500_000n;
+  }
   // Coastal batteries shell hostile warships and transport ships inside this
   // radius. Shorter than warshipTargettingRange on purpose: a fleet can stand
   // off, but it cannot escort a landing onto a defended shore for free.

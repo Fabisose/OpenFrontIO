@@ -554,7 +554,11 @@ export class WarshipExecution implements Execution {
     }
 
     const healingPool =
-      dockedPort.level() * this.mg.config().warshipPortHealingBonusPerLevel();
+      dockedPort.level() *
+      this.mg.config().warshipPortHealingBonusPerLevel() *
+      (dockedPort.isFortified()
+        ? this.mg.config().fortifiedPortHealingMultiplier()
+        : 1);
     if (healingPool <= 0 || dockedShips.length === 0) {
       return;
     }

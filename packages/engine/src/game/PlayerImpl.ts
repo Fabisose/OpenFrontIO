@@ -1503,6 +1503,21 @@ export class PlayerImpl implements Player {
     return true;
   }
 
+  public canFortifyPort(unit: Unit): boolean {
+    if (unit.type() !== UnitType.Port || !unit.isActive()) {
+      return false;
+    }
+    if (unit.isFortified() || !this.isUnitValidToUpgrade(unit)) {
+      return false;
+    }
+    return this.gold() >= this.mg.config().portFortificationCost(this);
+  }
+
+  fortifyPort(unit: Unit) {
+    this.removeGold(this.mg.config().portFortificationCost(this));
+    unit.setFortified(true);
+  }
+
   upgradeUnit(unit: Unit) {
     const cost = this.mg.unitInfo(unit.type()).cost(this.mg, this);
     this.removeGold(cost);

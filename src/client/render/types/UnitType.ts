@@ -30,6 +30,9 @@ export const UT_DEFENSE_POST = "Defense Post" as const;
 export const UT_SAM_LAUNCHER = "SAM Launcher" as const;
 export const UT_MISSILE_SILO = "Missile Silo" as const;
 export const UT_COASTAL_BATTERY = "Coastal Battery" as const;
+/** Render-only key: a Port whose `fortified` flag is set draws with this
+ *  icon, shape and settings. It is never a real unit type. */
+export const UT_FORTIFIED_PORT = "Fortified Port" as const;
 
 // ---------------------------------------------------------------------------
 // Derived sets

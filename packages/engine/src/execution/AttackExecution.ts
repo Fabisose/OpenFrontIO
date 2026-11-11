@@ -359,6 +359,26 @@ export class AttackExecution implements Execution {
     }
   }
 
+  /**
+   * A fortified port hardens the land around it like a defense post. Walks the
+   * defender's own ports (a handful at most) instead of a spatial query: this
+   * runs for every conquered tile.
+   */
+  private hasFortifiedPortNearby(defender: Player, tile: TileRef): boolean {
+    const range = this.mg.config().defensePostRange();
+    const rangeSquared = range * range;
+    for (const port of defender.units(UnitType.Port)) {
+      if (
+        port.isFortified() &&
+        port.isActive() &&
+        this.mg.euclideanDistSquared(tile, port.tile()) <= rangeSquared
+      ) {
+        return true;
+      }
+    }
+    return false;
+  }
+
   private attackLogicInput(
     attackTroops: number,
     tile: TileRef,
@@ -371,12 +391,13 @@ export class AttackExecution implements Execution {
     // attack on the map.
     const defenderHasDefensePost =
       defender !== null &&
-      this.mg.hasUnitNearby(
+      (this.mg.hasUnitNearby(
         tile,
         this.mg.config().defensePostRange(),
         UnitType.DefensePost,
         defender.id(),
-      );
+      ) ||
+        this.hasFortifiedPortNearby(defender, tile));
     return {
       terrain: this.map.terrainType(tile),
       attackTroops,

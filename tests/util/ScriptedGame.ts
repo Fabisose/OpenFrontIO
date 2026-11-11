@@ -222,6 +222,7 @@ function queuedIntent(game: Game, p: Player, tick: number): Intent | null {
       tile: p.spawnTile() ?? 0,
     },
     { type: "upgrade_structure", unit: UnitType.City, unitId: 1 },
+    { type: "fortify_port", unitId: 1 },
     { type: "move_warship", unitIds: [1], tile: 0 },
     { type: "delete_unit", unitId: 1 },
     {
@@ -517,6 +518,9 @@ function playIntent(game: Game, p: Player, rand: PseudoRandom): Intent | null {
     case 9: {
       const s = pick(rand, own([...STRUCTURES]));
       if (s === null) return null;
+      if (s.type() === UnitType.Port && !s.isFortified() && rand.chance(2)) {
+        return { type: "fortify_port", unitId: s.id() };
+      }
       return { type: "upgrade_structure", unit: s.type(), unitId: s.id() };
     }
     case 10: {

@@ -29,6 +29,7 @@ import { TooltipItem } from "./RadialMenu";
 import { EventBus } from "@openfront/shared/EventBus";
 import {
   BuildUnitIntentEvent,
+  SendFortifyPortIntentEvent,
   SendUpgradeStructureIntentEvent,
 } from "../../Transport";
 const allianceIcon = assetUrl("images/AllianceIconWhite.svg");
@@ -38,6 +39,7 @@ const chatIcon = assetUrl("images/ChatIconWhite.svg");
 const donateGoldIcon = assetUrl("images/DonateGoldIconWhite.svg");
 const donateTroopIcon = assetUrl("images/DonateTroopIconWhite.svg");
 const emojiIcon = assetUrl("images/EmojiIconWhite.svg");
+const fortifyPortIcon = assetUrl("images/FortifiedPortIconWhite.svg");
 const infoIcon = assetUrl("images/InfoIcon.svg");
 const swordIcon = assetUrl("images/SwordIconWhite.svg");
 const targetIcon = assetUrl("images/TargetIconWhite.svg");
@@ -701,6 +703,54 @@ const deleteUnitElement: MenuElement = {
   },
 };
 
+const FORTIFY_SELECTION_RADIUS = 5;
+
+/** The player's nearest finished, not yet fortified port around the tile. */
+function fortifiablePortNear(params: MenuElementParams) {
+  const ports = params.myPlayer
+    .units(UnitType.Port)
+    .filter(
+      (unit) =>
+        !unit.isUnderConstruction() &&
+        unit.markedForDeletion() === false &&
+        !unit.isFortified() &&
+        params.game.manhattanDist(unit.tile(), params.tile) <=
+          FORTIFY_SELECTION_RADIUS,
+    );
+  return findClosestBy(ports, (unit) =>
+    params.game.manhattanDist(unit.tile(), params.tile),
+  );
+}
+
+function fortifyPortCost(params: MenuElementParams): bigint {
+  const config = params.game.config();
+  return config.gameConfig().infiniteGold
+    ? 0n
+    : config.portFortificationBaseCost();
+}
+
+const fortifyPortElement: MenuElement = {
+  id: Slot.Ally,
+  name: "fortify_port",
+  disabled: (params: MenuElementParams) =>
+    params.game.inSpawnPhase() ||
+    !fortifiablePortNear(params) ||
+    params.myPlayer.gold() < fortifyPortCost(params),
+  icon: fortifyPortIcon,
+  color: COLORS.build,
+  tooltipKeys: [
+    { key: "radial_menu.fortify_port_title", className: "title" },
+    { key: "radial_menu.fortify_port_description", className: "description" },
+  ],
+  action: (params: MenuElementParams) => {
+    const port = fortifiablePortNear(params);
+    if (port) {
+      params.eventBus.emit(new SendFortifyPortIntentEvent(port.id()));
+    }
+    params.closeMenu();
+  },
+};
+
 export const buildMenuElement: MenuElement = {
   id: Slot.Build,
   name: "build",
@@ -811,7 +861,15 @@ export const rootMenuElement: MenuElement = {
     const menuItems: (MenuElement | null)[] = [
       infoMenuElement,
       ...(isOwnTerritory
-        ? [deleteUnitElement, allyRequestElement, buildMenuElement]
+        ? [
+            deleteUnitElement,
+            // Requesting an alliance means nothing on your own land, so a
+            // port that can still be fortified takes that slot.
+            fortifiablePortNear(params)
+              ? fortifyPortElement
+              : allyRequestElement,
+            buildMenuElement,
+          ]
         : [
             isAllied && !isDisconnected ? allyBreakElement : boatMenuElement,
             inExtensionWindow ? allyExtendElement : allyRequestElement,

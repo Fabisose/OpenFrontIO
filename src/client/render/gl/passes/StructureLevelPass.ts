@@ -17,6 +17,7 @@ import {
   STRUCTURE_TYPES,
   UT_CITY,
   UT_COASTAL_BATTERY,
+  UT_FORTIFIED_PORT,
   UT_DEFENSE_POST,
   UT_FACTORY,
   UT_MISSILE_SILO,
@@ -53,7 +54,10 @@ const STRUCTURE_ORDER = [
   UT_SAM_LAUNCHER,
   UT_MISSILE_SILO,
   UT_COASTAL_BATTERY,
+  UT_FORTIFIED_PORT,
 ] as const;
+
+const FORTIFIED_PORT_COL = STRUCTURE_ORDER.indexOf(UT_FORTIFIED_PORT);
 
 /** Max characters per level label (handles up to "99"). */
 const MAX_LEVEL_CHARS = 4;
@@ -328,7 +332,9 @@ export class StructureLevelPass {
       const x = unit.pos % this.mapW;
       const y = (unit.pos - x) / this.mapW;
       const len = Math.min(levelStr.length, MAX_LEVEL_CHARS);
-      const atlasIdx = this.typeToAtlasCol.get(unit.unitType) ?? 0;
+      const atlasIdx = unit.fortified
+        ? FORTIFIED_PORT_COL
+        : (this.typeToAtlasCol.get(unit.unitType) ?? 0);
 
       for (let i = 0; i < len; i++) {
         this.instanceBuf.ensureCapacity(count + 1);

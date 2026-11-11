@@ -227,6 +227,11 @@ export interface Unit extends UnitLike {
   toUpdate(): UnitUpdate;
   hasTrainStation(): boolean;
   setTrainStation(trainStation: boolean): void;
+
+  // Ports only: a fortified port shells hostile ships, hardens the land
+  // around it and repairs docked warships faster.
+  isFortified(): boolean;
+  setFortified(fortified: boolean): void;
   wasDestroyedByEnemy(): boolean;
   destroyer(): Player | undefined;
 
@@ -424,6 +429,8 @@ export interface Player extends PlayerLike {
   findUnitToUpgrade(type: UnitType, targetTile: TileRef): Unit | false;
   canUpgradeUnit(unit: Unit): boolean;
   upgradeUnit(unit: Unit): void;
+  canFortifyPort(unit: Unit): boolean;
+  fortifyPort(unit: Unit): void;
   captureUnit(unit: Unit): void;
 
   // Relations & Diplomacy

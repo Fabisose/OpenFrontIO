@@ -820,6 +820,19 @@ export class EngineConfig extends Config {
     return 25;
   }
 
+  // One-off price for turning a port into a fortified port.
+  portFortificationCost(player: Player): bigint {
+    if (player.type() === PlayerType.Human && this.hasInfiniteGoldFor(player)) {
+      return 0n;
+    }
+    return this.portFortificationBaseCost();
+  }
+
+  // Docked warships repair this many times faster at a fortified port.
+  fortifiedPortHealingMultiplier(): number {
+    return 2;
+  }
+
   // Ticks between coastal battery shells. Slower than a warship (20): one
   // battery loses a gun duel against a fleet, but wins against a lone ship
   // that has to sail into its range.
