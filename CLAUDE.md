@@ -2,6 +2,14 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+## This is a fork
+
+This checkout is the fork `Fabisose/OpenFrontIO`, not upstream. Read
+[docs/ForkNotes.md](docs/ForkNotes.md) before starting: it lists what the fork
+adds (coastal battery, fortified ports), how to run and test it in Docker, the
+open work, and one hard rule: do not run the full test suite on the owner's
+laptop (it crashed it twice); run targeted test files with limited workers.
+
 ## Commands
 
 ```bash
