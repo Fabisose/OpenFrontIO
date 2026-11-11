@@ -729,27 +729,40 @@ function fortifyPortCost(params: MenuElementParams): bigint {
     : config.portFortificationBaseCost();
 }
 
-const fortifyPortElement: MenuElement = {
-  id: Slot.Ally,
-  name: "fortify_port",
-  disabled: (params: MenuElementParams) =>
-    params.game.inSpawnPhase() ||
-    !fortifiablePortNear(params) ||
-    params.myPlayer.gold() < fortifyPortCost(params),
-  icon: fortifyPortIcon,
-  color: COLORS.build,
-  tooltipKeys: [
-    { key: "radial_menu.fortify_port_title", className: "title" },
-    { key: "radial_menu.fortify_port_description", className: "description" },
-  ],
-  action: (params: MenuElementParams) => {
-    const port = fortifiablePortNear(params);
-    if (port) {
-      params.eventBus.emit(new SendFortifyPortIntentEvent(port.id()));
-    }
-    params.closeMenu();
-  },
-};
+function fortifyPortElement(params: MenuElementParams): MenuElement {
+  const cost = fortifyPortCost(params);
+  return {
+    id: Slot.Ally,
+    name: "fortify_port",
+    disabled: (p: MenuElementParams) =>
+      p.game.inSpawnPhase() ||
+      !fortifiablePortNear(p) ||
+      p.myPlayer.gold() < cost,
+    icon: fortifyPortIcon,
+    color: COLORS.build,
+    tooltipItems: [
+      {
+        text: translateText("radial_menu.fortify_port_title"),
+        className: "title",
+      },
+      {
+        text: translateText("radial_menu.fortify_port_description"),
+        className: "description",
+      },
+      {
+        text: `${renderNumber(cost)} ${translateText("player_panel.gold")}`,
+        className: "cost",
+      },
+    ],
+    action: (p: MenuElementParams) => {
+      const port = fortifiablePortNear(p);
+      if (port) {
+        p.eventBus.emit(new SendFortifyPortIntentEvent(port.id()));
+      }
+      p.closeMenu();
+    },
+  };
+}
 
 export const buildMenuElement: MenuElement = {
   id: Slot.Build,
@@ -866,7 +879,7 @@ export const rootMenuElement: MenuElement = {
             // Requesting an alliance means nothing on your own land, so a
             // port that can still be fortified takes that slot.
             fortifiablePortNear(params)
-              ? fortifyPortElement
+              ? fortifyPortElement(params)
               : allyRequestElement,
             buildMenuElement,
           ]
